@@ -1,0 +1,329 @@
+openapi: 3.0.3
+info:
+  title: Blog API - ORM Showcase
+  version: 1.0.0
+  description: API for managing users, articles, and embedded comments in a blog system.
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /users:
+    get:
+      summary: Get all users
+      description: Retrieve a list of all users in the system.
+      tags:
+        - Users
+      responses:
+        "200":
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      summary: Create a new user
+      description: Create a new user with the provided information.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: User created
+
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      description: Retrieve a specific user by their unique identifier.
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+    delete:
+      summary: Delete (or deactivate) a user
+      description: Remove a user from the system.
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: User deleted
+
+  /articles:
+    get:
+      summary: Get all articles
+      description: Retrieve a list of all articles in the system.
+      tags:
+        - Articles
+      responses:
+        "200":
+          description: A list of articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Article"
+    post:
+      summary: Create a new article
+      description: Create a new article with the provided content and metadata.
+      tags:
+        - Articles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArticleInput"
+      responses:
+        "201":
+          description: Article created
+
+  /articles/{id}:
+    get:
+      summary: Get an article by ID (with comments)
+      description: Retrieve a specific article by its unique identifier including all comments.
+      tags:
+        - Articles
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Article found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        "404":
+          description: Article not found
+    put:
+      summary: Update an article
+      description: Update an existing article with new content and metadata.
+      tags:
+        - Articles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArticleInput"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Article updated
+    delete:
+      summary: Delete an article
+      description: Remove an article from the system.
+      tags:
+        - Articles
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Article deleted
+
+  /articles/{articleId}/comments:
+    post:
+      summary: Create a new comment on an article
+      description: Add a new comment to a specific article by providing the comment content and author information.
+      tags:
+        - Articles/Comments
+      parameters:
+        - in: path
+          name: articleId
+          required: true
+          schema:
+            type: string
+          description: The ID of the article to comment on
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentInput"
+      responses:
+        "201":
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        "404":
+          description: Article not found
+
+  /articles/{articleId}/comments/{commentId}:
+    put:
+      summary: Update a comment
+      description: Update the content of an existing comment on an article.
+      tags:
+        - Articles/Comments
+      parameters:
+        - in: path
+          name: articleId
+          required: true
+          schema:
+            type: string
+          description: The ID of the article containing the comment
+        - in: path
+          name: commentId
+          required: true
+          schema:
+            type: string
+          description: The ID of the comment to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentInput"
+      responses:
+        "200":
+          description: Comment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        "404":
+          description: Article or comment not found
+    delete:
+      summary: Delete a comment
+      description: Remove a comment from an article.
+      tags:
+        - Articles/Comments
+      parameters:
+        - in: path
+          name: articleId
+          required: true
+          schema:
+            type: string
+          description: The ID of the article containing the comment
+        - in: path
+          name: commentId
+          required: true
+          schema:
+            type: string
+          description: The ID of the comment to delete
+      responses:
+        "204":
+          description: Comment deleted successfully
+        "404":
+          description: Article or comment not found
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        active:
+          type: boolean
+      required: [id, name, email, active]
+
+    UserInput:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+      required: [name, email]
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+        authorName:
+          type: string
+        content:
+          type: string
+        postedAt:
+          type: string
+          format: date-time
+      required: [id, authorName, content, postedAt]
+
+    Article:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        authorId:
+          type: string
+        publishedAt:
+          type: string
+          format: date-time
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Comment"
+      required: [id, title, content, authorId, publishedAt, comments]
+
+    ArticleInput:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        authorId:
+          type: string
+      required: [title, content, authorId]
+
+    CommentInput:
+      type: object
+      properties:
+        authorId:
+          type: string
+        content:
+          type: string
+        articleId:
+          type: string
+      required: [authorId, content, articleId]
