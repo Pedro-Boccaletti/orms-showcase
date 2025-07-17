@@ -1,0 +1,26 @@
+{
+  "name": "blog-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/blog-api/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "blog-api:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "blog-api:build:development"
+        },
+        "production": {
+          "buildTarget": "blog-api:build:production"
+        }
+      }
+    }
+  }
+}
