@@ -2,7 +2,9 @@
 export * from './lib/dtos/create-article.dto';
 export * from './lib/dtos/create-comment.dto';
 export * from './lib/dtos/create-user.dto';
-export * from './lib/dtos/update.dto';
+export * from './lib/dtos/update-user.dto';
+export * from './lib/dtos/update-article.dto';
+export * from './lib/dtos/update-comment.dto';
 
 // Entities
 export * from './lib/entities/article.entity';
