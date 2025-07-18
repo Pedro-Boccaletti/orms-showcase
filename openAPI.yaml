@@ -16,14 +16,14 @@ paths:
       tags:
         - Users
       responses:
-        "200":
+        '200':
           description: A list of users
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
+                  $ref: '#/components/schemas/User'
     post:
       summary: Create a new user
       description: Create a new user with the provided information.
@@ -34,9 +34,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserInput"
+              $ref: '#/components/schemas/UserInput'
       responses:
-        "201":
+        '201':
           description: User created
 
   /users/{id}:
@@ -52,13 +52,13 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: User found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
-        "404":
+                $ref: '#/components/schemas/User'
+        '404':
           description: User not found
     delete:
       summary: Delete (or deactivate) a user
@@ -72,7 +72,7 @@ paths:
           schema:
             type: string
       responses:
-        "204":
+        '204':
           description: User deleted
 
   /articles:
@@ -82,14 +82,14 @@ paths:
       tags:
         - Articles
       responses:
-        "200":
+        '200':
           description: A list of articles
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Article"
+                  $ref: '#/components/schemas/Article'
     post:
       summary: Create a new article
       description: Create a new article with the provided content and metadata.
@@ -100,9 +100,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ArticleInput"
+              $ref: '#/components/schemas/ArticleInput'
       responses:
-        "201":
+        '201':
           description: Article created
 
   /articles/{id}:
@@ -118,15 +118,15 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Article found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Article"
-        "404":
+                $ref: '#/components/schemas/Article'
+        '404':
           description: Article not found
-    put:
+    patch:
       summary: Update an article
       description: Update an existing article with new content and metadata.
       tags:
@@ -136,7 +136,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ArticleInput"
+              $ref: '#/components/schemas/ArticleInput'
       parameters:
         - in: path
           name: id
@@ -144,7 +144,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Article updated
     delete:
       summary: Delete an article
@@ -158,7 +158,7 @@ paths:
           schema:
             type: string
       responses:
-        "204":
+        '204':
           description: Article deleted
 
   /articles/{articleId}/comments:
@@ -179,19 +179,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CommentInput"
+              $ref: '#/components/schemas/CommentInput'
       responses:
-        "201":
+        '201':
           description: Comment created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Comment"
-        "404":
+                $ref: '#/components/schemas/Comment'
+        '404':
           description: Article not found
 
   /articles/{articleId}/comments/{commentId}:
-    put:
+    patch:
       summary: Update a comment
       description: Update the content of an existing comment on an article.
       tags:
@@ -214,15 +214,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CommentInput"
+              $ref: '#/components/schemas/CommentInput'
       responses:
-        "200":
+        '200':
           description: Comment updated successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Comment"
-        "404":
+                $ref: '#/components/schemas/Comment'
+        '404':
           description: Article or comment not found
     delete:
       summary: Delete a comment
@@ -243,9 +243,9 @@ paths:
             type: string
           description: The ID of the comment to delete
       responses:
-        "204":
+        '204':
           description: Comment deleted successfully
-        "404":
+        '404':
           description: Article or comment not found
 
 components:
@@ -303,7 +303,7 @@ components:
         comments:
           type: array
           items:
-            $ref: "#/components/schemas/Comment"
+            $ref: '#/components/schemas/Comment'
       required: [id, title, content, authorId, publishedAt, comments]
 
     ArticleInput:
@@ -324,6 +324,4 @@ components:
           type: string
         content:
           type: string
-        articleId:
-          type: string
-      required: [authorId, content, articleId]
+      required: [authorId, content]
