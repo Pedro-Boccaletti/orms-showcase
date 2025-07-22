@@ -4,11 +4,12 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { CommentEntity } from './comment.entity';
 
-@Entity()
+@Entity('articles')
 export class ArticleEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -16,7 +17,7 @@ export class ArticleEntity {
   @Column()
   title: string;
 
-  @Column()
+  @Column('text')
   content: string;
 
   @Column('uuid', { name: 'author_id' })
@@ -24,14 +25,15 @@ export class ArticleEntity {
 
   @Column({
     type: 'timestamp',
-    name: 'created_at',
+    name: 'published_at',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  createdAt: Date;
+  publishedAt: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.articles)
+  @JoinColumn({ name: 'author_id' })
   author: UserEntity;
 
-  @OneToMany(() => CommentEntity, (comment) => comment.articleId)
+  @OneToMany(() => CommentEntity, (comment) => comment.article)
   comments: CommentEntity[];
 }
