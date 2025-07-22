@@ -330,6 +330,10 @@ components:
         publishedAt:
           type: string
           format: date-time
+        tags:
+          type: array
+          items:
+            type: string
         comments:
           type: array
           items:
