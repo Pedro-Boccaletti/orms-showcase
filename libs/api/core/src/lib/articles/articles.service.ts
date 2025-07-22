@@ -4,7 +4,9 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import {
   Article,
+  ARTICLE_REPOSITORY,
   Comment,
+  COMMENT_REPOSITORY,
   IArticleRepository,
   ICommentRepository,
 } from '@orms-showcase/domain';
@@ -13,20 +15,20 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 @Injectable()
 export class ArticlesService {
   constructor(
-    @Inject('ArticleRepository') private repo: IArticleRepository,
-    @Inject('CommentRepository') private commentRepo: ICommentRepository
+    @Inject(ARTICLE_REPOSITORY) private repo: IArticleRepository,
+    @Inject(COMMENT_REPOSITORY) private commentRepo: ICommentRepository
   ) {}
 
   async create(createArticleDto: CreateArticleDto): Promise<Article> {
     return this.repo.create(createArticleDto);
   }
 
-  async findAll(): Promise<Article[]> {
-    return this.repo.findAll();
+  async findAll(includeComments: boolean): Promise<Article[]> {
+    return this.repo.findAll({ includeComments });
   }
 
   async findOne(id: string): Promise<Article> {
-    const article = await this.repo.findById(id);
+    const article = await this.repo.findById(id, { includeComments: true });
     if (!article) {
       throw new NotFoundException(`Article with id ${id} not found`);
     }
@@ -79,5 +81,15 @@ export class ArticlesService {
         `Comment with id ${commentId} not found for article ${articleId}`
       );
     }
+  }
+
+  async findCommentsByArticleId(articleId: string): Promise<Comment[]> {
+    const comments = await this.commentRepo.findByArticleId(articleId);
+    if (!comments.length) {
+      throw new NotFoundException(
+        `No comments found for article with id ${articleId}`
+      );
+    }
+    return comments;
   }
 }

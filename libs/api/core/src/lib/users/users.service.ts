@@ -1,11 +1,11 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { IUserRepository, User } from '@orms-showcase/domain';
+import { IUserRepository, User, USER_REPOSITORY } from '@orms-showcase/domain';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(@Inject('UserRepository') private repo: IUserRepository) {}
+  constructor(@Inject(USER_REPOSITORY) private repo: IUserRepository) {}
 
   async findAll(): Promise<User[]> {
     return this.repo.findAll();
