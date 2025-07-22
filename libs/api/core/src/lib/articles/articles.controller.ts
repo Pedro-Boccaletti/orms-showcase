@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -23,8 +24,8 @@ export class ArticlesController {
   }
 
   @Get()
-  findAll() {
-    return this.articlesService.findAll();
+  findAll(@Query() query?: { includeComments?: string }) {
+    return this.articlesService.findAll(query?.includeComments === 'true');
   }
 
   @Get(':id')
@@ -69,5 +70,10 @@ export class ArticlesController {
     @Param('commentId') commentId: string
   ) {
     return this.articlesService.deleteComment(articleId, commentId);
+  }
+
+  @Get(':id/comments')
+  findCommentsByArticleId(@Param('id') id: string) {
+    return this.articlesService.findCommentsByArticleId(id);
   }
 }
