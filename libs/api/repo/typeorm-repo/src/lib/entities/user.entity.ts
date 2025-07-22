@@ -1,24 +1,24 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { CommentEntity } from './comment.entity';
 import { ArticleEntity } from './article.entity';
 
-@Entity()
+@Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   name: string;
 
-  @Column()
+  @Column({ default: true })
   active: boolean;
 
-  @ManyToOne(() => UserEntity, (user) => user.comments)
+  @OneToMany(() => CommentEntity, (comment) => comment.author)
   comments: CommentEntity[];
 
-  @ManyToOne(() => UserEntity, (user) => user.articles)
+  @OneToMany(() => ArticleEntity, (article) => article.author)
   articles: ArticleEntity[];
 }
