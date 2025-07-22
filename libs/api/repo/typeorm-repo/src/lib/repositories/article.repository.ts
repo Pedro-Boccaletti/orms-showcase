@@ -6,7 +6,7 @@ import {
 } from '@orms-showcase/domain';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ArticleEntity } from './entities/article.entity';
+import { ArticleEntity } from '../entities/article.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -18,31 +18,18 @@ export class ArticleRepository implements IArticleRepository {
 
   async findAll(): Promise<Article[]> {
     const articles = await this.articleRepository.find();
-    return articles.map(({ createdAt, ...article }) => {
-      return {
-        publishedAt: createdAt,
-        ...article,
-      };
-    });
+    return articles;
   }
 
   async findById(id: string): Promise<Article | null> {
     const article = await this.articleRepository.findOne({ where: { id } });
     if (!article) return null;
-    const { createdAt, ...rest } = article;
-    return {
-      publishedAt: createdAt,
-      ...rest,
-    };
+    return article;
   }
 
   async create(dto: CreateArticleDto): Promise<Article> {
     const article = await this.articleRepository.save(dto);
-    const { createdAt, ...rest } = article;
-    return {
-      publishedAt: createdAt,
-      ...rest,
-    };
+    return article;
   }
 
   async update(id: string, article: UpdateArticleDto): Promise<Article | null> {
@@ -53,17 +40,18 @@ export class ArticleRepository implements IArticleRepository {
       return null;
     }
     const updatedArticle = Object.assign(existingArticle, article);
-    const { createdAt, ...rest } = await this.articleRepository.save(
-      updatedArticle
-    );
-    return {
-      publishedAt: createdAt,
-      ...rest,
-    };
+    return this.articleRepository.save(updatedArticle);
   }
 
   async delete(id: string): Promise<boolean> {
     const result = await this.articleRepository.delete(id);
     return result.affected ? true : false;
+  }
+
+  async findByAuthorId(authorId: string): Promise<Article[]> {
+    const articles = await this.articleRepository.find({
+      where: { authorId },
+    });
+    return articles;
   }
 }
