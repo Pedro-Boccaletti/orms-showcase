@@ -315,14 +315,67 @@ INSERT INTO comments (article_id, content, author_id, created_at) VALUES
  (SELECT id FROM users WHERE email = 'sarah.connor@example.com'), 
  '2024-02-06 11:45:00');
 
--- Display summary of inserted data
-SELECT 'Seed data inserted successfully!' as message;
-SELECT COUNT(*) as user_count FROM users;
-SELECT COUNT(*) as article_count FROM articles;
-SELECT COUNT(*) as comment_count FROM comments;
+-- Insert sample tags
+DELETE FROM article_tags;
+DELETE FROM tags;
+
+INSERT INTO tags (name) VALUES
+('TypeScript'),
+('JavaScript'),
+('Programming'),
+('Web Development'),
+('REST API'),
+('Backend'),
+('Database'),
+('SQL'),
+('NoSQL'),
+('Docker'),
+('DevOps'),
+('Containerization'),
+('Software Engineering'),
+('Best Practices'),
+('Performance');
+
+-- Associate tags with articles
+-- TypeScript article
+INSERT INTO article_tags (article_id, tag_id) VALUES
+((SELECT id FROM articles WHERE title = 'Getting Started with TypeScript'), (SELECT id FROM tags WHERE name = 'TypeScript')),
+((SELECT id FROM articles WHERE title = 'Getting Started with TypeScript'), (SELECT id FROM tags WHERE name = 'JavaScript')),
+((SELECT id FROM articles WHERE title = 'Getting Started with TypeScript'), (SELECT id FROM tags WHERE name = 'Programming')),
+((SELECT id FROM articles WHERE title = 'Getting Started with TypeScript'), (SELECT id FROM tags WHERE name = 'Web Development'));
+
+-- REST API article
+INSERT INTO article_tags (article_id, tag_id) VALUES
+((SELECT id FROM articles WHERE title = 'Understanding REST API Design'), (SELECT id FROM tags WHERE name = 'REST API')),
+((SELECT id FROM articles WHERE title = 'Understanding REST API Design'), (SELECT id FROM tags WHERE name = 'Backend')),
+((SELECT id FROM articles WHERE title = 'Understanding REST API Design'), (SELECT id FROM tags WHERE name = 'Web Development')),
+((SELECT id FROM articles WHERE title = 'Understanding REST API Design'), (SELECT id FROM tags WHERE name = 'Best Practices'));
+
+-- Database Design article
+INSERT INTO article_tags (article_id, tag_id) VALUES
+((SELECT id FROM articles WHERE title = 'Database Design Best Practices'), (SELECT id FROM tags WHERE name = 'Database')),
+((SELECT id FROM articles WHERE title = 'Database Design Best Practices'), (SELECT id FROM tags WHERE name = 'SQL')),
+((SELECT id FROM articles WHERE title = 'Database Design Best Practices'), (SELECT id FROM tags WHERE name = 'NoSQL')),
+((SELECT id FROM articles WHERE title = 'Database Design Best Practices'), (SELECT id FROM tags WHERE name = 'Best Practices')),
+((SELECT id FROM articles WHERE title = 'Database Design Best Practices'), (SELECT id FROM tags WHERE name = 'Performance'));
+
+-- JavaScript ES2023 article
+INSERT INTO article_tags (article_id, tag_id) VALUES
+((SELECT id FROM articles WHERE title = 'Modern JavaScript ES2023 Features'), (SELECT id FROM tags WHERE name = 'JavaScript')),
+((SELECT id FROM articles WHERE title = 'Modern JavaScript ES2023 Features'), (SELECT id FROM tags WHERE name = 'Programming')),
+((SELECT id FROM articles WHERE title = 'Modern JavaScript ES2023 Features'), (SELECT id FROM tags WHERE name = 'Web Development'));
+
+-- Docker article
+INSERT INTO article_tags (article_id, tag_id) VALUES
+((SELECT id FROM articles WHERE title = 'Docker for Developers'), (SELECT id FROM tags WHERE name = 'Docker')),
+((SELECT id FROM articles WHERE title = 'Docker for Developers'), (SELECT id FROM tags WHERE name = 'DevOps')),
+((SELECT id FROM articles WHERE title = 'Docker for Developers'), (SELECT id FROM tags WHERE name = 'Containerization')),
+((SELECT id FROM articles WHERE title = 'Docker for Developers'), (SELECT id FROM tags WHERE name = 'Software Engineering'));
 
 -- Display summary of inserted data
 SELECT 'Seed data inserted successfully!' as message;
 SELECT COUNT(*) as user_count FROM users;
 SELECT COUNT(*) as article_count FROM articles;
 SELECT COUNT(*) as comment_count FROM comments;
+SELECT COUNT(*) as tag_count FROM tags;
+SELECT COUNT(*) as article_tag_count FROM article_tags;
