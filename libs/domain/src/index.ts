@@ -15,3 +15,4 @@ export * from './lib/entities/user.entity';
 export * from './lib/repositories/article-repository.interface';
 export * from './lib/repositories/comment-repository.interface';
 export * from './lib/repositories/user-repository.interface';
+export * from './lib/repositories/repository.token';
