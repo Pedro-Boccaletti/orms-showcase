@@ -85,8 +85,9 @@ paths:
         - in: query
           name: includeComments
           required: false
-          type: boolean
-          default: false
+          schema:
+            type: boolean
+            default: false
           description: Whether to include comments in the response
         - in: query
           name: tagId
@@ -162,8 +163,9 @@ paths:
         - in: query
           name: includeComments
           required: false
-          type: boolean
-          default: false
+          schema:
+            type: boolean
+            default: false
           description: Whether to include comments in the response
       responses:
         '200':
