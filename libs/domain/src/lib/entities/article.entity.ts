@@ -1,4 +1,5 @@
 import { Comment } from './comment.entity';
+import { Tag } from './tag.entity';
 
 export interface Article {
   readonly id: string;
@@ -7,4 +8,5 @@ export interface Article {
   authorId: string;
   readonly publishedAt: Date;
   comments: Comment[];
+  tags: Tag[];
 }

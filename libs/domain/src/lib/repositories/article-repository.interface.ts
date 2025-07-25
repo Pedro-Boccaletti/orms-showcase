@@ -4,10 +4,15 @@ import { Article } from '../entities/article.entity';
 
 export interface FetchArticlesOptions {
   includeComments?: boolean;
+  page?: number;
+  limit?: number;
+  tagId?: string;
+  tagName?: string;
+  authorId?: string;
 }
 
 export abstract class IArticleRepository {
-  abstract findAll(options?: FetchArticlesOptions): Promise<Article[]>;
+  abstract findAll(options: FetchArticlesOptions): Promise<Article[]>;
   abstract findById(
     id: string,
     options?: FetchArticlesOptions
@@ -18,5 +23,12 @@ export abstract class IArticleRepository {
     article: UpdateArticleDto
   ): Promise<Article | null>;
   abstract delete(id: string): Promise<boolean>;
-  abstract findByAuthorId(authorId: string): Promise<Article[]>;
+  abstract addTagToArticle(
+    articleId: string,
+    tagId: string
+  ): Promise<Article | null>;
+  abstract removeTagFromArticle(
+    articleId: string,
+    tagId: string
+  ): Promise<Article | null>;
 }
