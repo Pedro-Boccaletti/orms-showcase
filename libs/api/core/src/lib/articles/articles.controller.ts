@@ -13,6 +13,7 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { PushTagDto } from './dto/push-tag.dto';
 
 @Controller('articles')
 export class ArticlesController {
@@ -24,13 +25,26 @@ export class ArticlesController {
   }
 
   @Get()
-  findAll(@Query() query?: { includeComments?: string }) {
-    return this.articlesService.findAll(query?.includeComments === 'true');
+  findAll(
+    @Query()
+    query: {
+      includeComments?: boolean;
+      tagId?: string;
+      tagName?: string;
+      authorId?: string;
+      page?: number;
+      limit?: number;
+    }
+  ) {
+    return this.articlesService.findAll(query);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.articlesService.findOne(id);
+  findOne(
+    @Param('id') id: string,
+    @Query('includeComments') includeComments = false
+  ) {
+    return this.articlesService.findOne(id, includeComments);
   }
 
   @Patch(':id')
@@ -75,5 +89,36 @@ export class ArticlesController {
   @Get(':id/comments')
   findCommentsByArticleId(@Param('id') id: string) {
     return this.articlesService.findCommentsByArticleId(id);
+  }
+
+  @Post(':articleId/tag')
+  addTagToArticle(
+    @Param('articleId') articleId: string,
+    @Body() body: PushTagDto
+  ) {
+    return this.articlesService.addTagToArticle(articleId, body);
+  }
+
+  @Delete(':articleId/tag/:tagId')
+  removeTagFromArticle(
+    @Param('articleId') articleId: string,
+    @Param('tagId') tagId: string
+  ) {
+    return this.articlesService.removeTagFromArticle(articleId, tagId);
+  }
+
+  @Post('tags')
+  createTag(@Body('name') name: string) {
+    return this.articlesService.createTag(name);
+  }
+
+  @Patch('tags/:id')
+  updateTag(@Param('id') id: string, @Body('name') name: string) {
+    return this.articlesService.updateTag(id, name);
+  }
+
+  @Get('tags')
+  findAllTags() {
+    return this.articlesService.findAllTags();
   }
 }
