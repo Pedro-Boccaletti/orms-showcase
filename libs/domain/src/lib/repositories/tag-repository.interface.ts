@@ -7,5 +7,4 @@ export abstract class ITagRepository {
   abstract create(name: string): Promise<Tag>;
   abstract update(id: string, name: string): Promise<Tag | null>;
   abstract delete(id: string): Promise<boolean>;
-  abstract findPopularTags(limit?: number): Promise<Tag[]>;
 }
