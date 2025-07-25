@@ -3,13 +3,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { ArticleEntity } from './entities/article.entity';
 import { CommentEntity } from './entities/comment.entity';
+import { TagEntity } from './entities/tag.entity';
 import { UserRepository } from './repositories/user.repository';
 import { ArticleRepository } from './repositories/article.repository';
 import { CommentRepository } from './repositories/comment.repository';
+import { TagRepository } from './repositories/tag.repository';
 import {
   ARTICLE_REPOSITORY,
   COMMENT_REPOSITORY,
   USER_REPOSITORY,
+  TAG_REPOSITORY,
 } from '@orms-showcase/domain';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -31,12 +34,21 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
 
-    TypeOrmModule.forFeature([UserEntity, ArticleEntity, CommentEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      ArticleEntity,
+      CommentEntity,
+      TagEntity,
+    ]),
   ],
   providers: [
     {
       provide: USER_REPOSITORY,
       useClass: UserRepository,
+    },
+    {
+      provide: TAG_REPOSITORY,
+      useClass: TagRepository,
     },
     {
       provide: ARTICLE_REPOSITORY,
@@ -47,6 +59,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       useClass: CommentRepository,
     },
   ],
-  exports: [ARTICLE_REPOSITORY, COMMENT_REPOSITORY, USER_REPOSITORY],
+  exports: [
+    ARTICLE_REPOSITORY,
+    COMMENT_REPOSITORY,
+    USER_REPOSITORY,
+    TAG_REPOSITORY,
+  ],
 })
 export class TypeormRepoModule {}
