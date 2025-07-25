@@ -306,6 +306,43 @@ paths:
                   name:
                     type: string
 
+  /articles/tags/{tagId}:
+    patch:
+      summary: Update a tag
+      description: Update the name of an existing tag.
+      tags:
+        - Articles/Tags
+      parameters:
+        - in: path
+          name: tagId
+          required: true
+          schema:
+            type: string
+          description: The ID of the tag to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Tag updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+        '404':
+          description: Tag not found
+
   /articles/{articleId}/comments:
     get:
       summary: Get comments for an article
