@@ -112,20 +112,23 @@ export class ArticlesService {
     articleId: string,
     param: PushTagDto
   ): Promise<Article> {
-    let tag: Tag;
+    let tagId: string;
     if (!param.tagId) {
       if (!param.tagName) {
         throw new NotFoundException('Either tagId or tagName must be provided');
       }
-      tag = await this.tagRepo.create(param.tagName);
+      const tag = await this.tagRepo.create(param.tagName);
+      tagId = tag.id;
+    } else {
+      tagId = param.tagId;
     }
     const updatedArticle = await this.articleRepo.addTagToArticle(
       articleId,
-      param.tagId || tag!.id
+      tagId
     );
     if (!updatedArticle) {
       throw new NotFoundException(
-        `Article with id ${articleId} not found or tag with id ${param.tagId} not found`
+        `Article with id ${articleId} not found or tag with id ${tagId} not found`
       );
     }
     return updatedArticle;
