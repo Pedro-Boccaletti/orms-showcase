@@ -5,9 +5,12 @@ import {
   ManyToOne,
   OneToMany,
   JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { CommentEntity } from './comment.entity';
+import { TagEntity } from './tag.entity';
 
 @Entity('articles')
 export class ArticleEntity {
@@ -36,4 +39,18 @@ export class ArticleEntity {
 
   @OneToMany(() => CommentEntity, (comment) => comment.article)
   comments: CommentEntity[];
+
+  @ManyToMany(() => TagEntity, (tag) => tag.articles)
+  @JoinTable({
+    name: 'article_tags',
+    joinColumn: {
+      name: 'article_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'tag_id',
+      referencedColumnName: 'id',
+    },
+  })
+  tags: TagEntity[];
 }
