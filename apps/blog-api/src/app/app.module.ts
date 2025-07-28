@@ -1,10 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CoreModule } from '@orms-showcase/core';
-import {
-  RepositoryConfigModule,
-  Repositories,
-} from './config/repository.config';
 
 @Module({
   imports: [
@@ -13,11 +9,6 @@ import {
       isGlobal: true,
       envFilePath: '.env',
     }),
-
-    // Repository configuration module
-    RepositoryConfigModule.forRoot(
-      process.env['REPOSITORY_TYPE'] as Repositories
-    ),
 
     // Core module (includes repositories and business logic)
     CoreModule,

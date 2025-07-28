@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeormRepoModule } from '@orms-showcase/typeorm-repo';
-import { DrizzleRepoModule } from '@orms-showcase/drizzle-repo';
-import { PrismaRepoModule } from '@orms-showcase/prisma-repo';
+// import { DrizzleRepoModule } from '@orms-showcase/drizzle-repo';
+// import { PrismaRepoModule } from '@orms-showcase/prisma-repo';
 
 export enum Repositories {
   //  DRIZZLE = 'drizzle',
