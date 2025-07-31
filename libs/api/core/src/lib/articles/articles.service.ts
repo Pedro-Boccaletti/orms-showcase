@@ -30,14 +30,7 @@ export class ArticlesService {
   }
 
   async findAll(options: FetchArticlesOptions): Promise<Article[]> {
-    return this.articleRepo.findAll({
-      includeComments: options.includeComments,
-      page: options.page,
-      limit: options.limit,
-      tagId: options.tagId,
-      tagName: options.tagName,
-      authorId: options.authorId,
-    });
+    return this.articleRepo.findAll(options);
   }
 
   async findOne(id: string, includeComments: boolean): Promise<Article> {
