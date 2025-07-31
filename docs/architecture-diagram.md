@@ -3,50 +3,67 @@
 ## Service Architecture Diagram
 
 ```mermaid
-graph TB
-    %% External Layer
-    Client[Client/Browser] --> API[Blog API<br/>:3000]
+graph TD
+    subgraph apps["🚀 Applications"]
+        blog_api["Blog API App"]
+        blog_api_e2e["E2E Tests"]
+    end
 
-    %% Application Layer
-    API --> AppModule[App Module<br/>NestJS Application]
-    AppModule --> CoreModule[Core Module<br/>Business Logic]
+    domain["Domain Entities<br/>DTOs & Interfaces"]
 
-    %% Core Services
-    CoreModule --> ArticlesModule[Articles Module]
-    CoreModule --> UsersModule[Users Module]
-    CoreModule --> RepoConfig[Repository Config Module]
+    subgraph libs_api["⚙️ API Libraries"]
+        api_core["Core Module"]
+        articles_module["Articles Module"]
+        users_module["Users Module"]
+        repository_config["Repository Config<br/>Dynamic ORM Selection"]
+    end
 
-    %% Controllers & Services
-    ArticlesModule --> ArticlesController[Articles Controller]
-    ArticlesModule --> ArticlesService[Articles Service]
-    UsersModule --> UsersController[Users Controller]
-    UsersModule --> UsersService[Users Service]
+    subgraph libs_repos["🗄️ Repository Libraries"]
+        typeorm_repo[("TypeORM Repository")]
+        prisma_repo[("Prisma Repository")]
+        drizzle_repo[("Drizzle Repository")]
+    end
 
-    %% Repository Abstraction Layer
-    RepoConfig --> RepoChoice{REPOSITORY_TYPE<br/>Environment Variable}
-    RepoChoice -->|typeorm| TypeORMRepo[TypeORM Repository Module]
-    RepoChoice -->|drizzle| DrizzleRepo[Drizzle Repository Module<br/>🚧 Coming Soon]
-    RepoChoice -->|prisma| PrismaRepo[Prisma Repository Module<br/>🚧 Coming Soon]
+    %% Main app dependencies
+    blog_api --> api_core
+    blog_api_e2e -.-> blog_api
 
-    %% Repository Implementations
-    TypeORMRepo --> DB[(PostgreSQL Database)]
+    %% Core module dependencies
+    api_core --> articles_module
+    api_core --> users_module
+    api_core --> repository_config
+
+    %% Business modules depend on domain
+    articles_module -->|uses types| domain
+    users_module -->|uses types| domain
+
+    %% Repository config selects ORM implementation
+    repository_config -->|injects one| libs_repos
+
+    %% All repositories implement domain interfaces
+    libs_repos -->|implements| domain
+
+    %% All repositories connect to the database
+    libs_repos -->|connects to| database[(Database)]
 
     %% Enhanced Styling
-    classDef client fill:#4a90e2,stroke:#2c5282,stroke-width:3px,color:#ffffff
-    classDef application fill:#38a169,stroke:#2f855a,stroke-width:2px,color:#ffffff
-    classDef core fill:#805ad5,stroke:#553c9a,stroke-width:2px,color:#ffffff
-    classDef repository fill:#ed8936,stroke:#c05621,stroke-width:2px,color:#ffffff
-    classDef database fill:#e53e3e,stroke:#c53030,stroke-width:3px,color:#ffffff
-    classDef environment fill:#319795,stroke:#2c7a7b,stroke-width:2px,color:#ffffff
-    classDef comingSoon fill:#a0aec0,stroke:#718096,stroke-width:2px,stroke-dasharray:5 5,color:#2d3748
+    classDef appNode fill:#1e293b,stroke:#3b82f6,stroke-width:3px,color:#ffffff,font-weight:bold
+    classDef domainNode fill:#7c3aed,stroke:#a855f7,stroke-width:3px,color:#ffffff,font-weight:bold
+    classDef apiNode fill:#059669,stroke:#10b981,stroke-width:3px,color:#ffffff,font-weight:bold
+    classDef repoNode fill:#dc2626,stroke:#ef4444,stroke-width:3px,color:#ffffff,font-weight:bold
+    classDef databaseNode fill:#92400e,stroke:#f59e0b,stroke-width:4px,color:#ffffff,font-weight:bold
 
-    class Client client
-    class API,AppModule application
-    class CoreModule,ArticlesModule,UsersModule,ArticlesController,ArticlesService,UsersController,UsersService core
-    class RepoConfig,TypeORMRepo repository
-    class DB database
-    class RepoChoice environment
-    class DrizzleRepo,PrismaRepo comingSoon
+    %% Subgraph styling
+    style apps fill:#f8fafc,stroke:#334155,stroke-width:2px,stroke-dasharray: 5 5
+    style libs_api fill:#f0fdf4,stroke:#166534,stroke-width:2px,stroke-dasharray: 5 5
+    style libs_repos fill:#fef2f2,stroke:#991b1b,stroke-width:2px,stroke-dasharray: 5 5
+
+    %% Apply classes to nodes
+    class blog_api,blog_api_e2e appNode
+    class domain domainNode
+    class api_core,articles_module,users_module,repository_config apiNode
+    class typeorm_repo,prisma_repo,drizzle_repo repoNode
+    class database databaseNode
 ```
 
 ## Database Schema Relationships
