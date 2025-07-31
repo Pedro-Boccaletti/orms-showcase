@@ -111,35 +111,6 @@ erDiagram
     tags }o--|| article_tags : ""
 ```
 
-## API Endpoints Flow
-
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant AC as Articles Controller
-    participant AS as Articles Service
-    participant AR as Article Repository
-    participant DB as PostgreSQL
-
-    C->>AC: GET /articles
-    AC->>AS: findAll()
-    AS->>AR: findAll()
-    AR->>DB: SELECT * FROM articles
-    DB-->>AR: Article records
-    AR-->>AS: Article entities
-    AS-->>AC: Article DTOs
-    AC-->>C: JSON Response
-
-    C->>AC: POST /articles
-    AC->>AS: create(articleDto)
-    AS->>AR: save(article)
-    AR->>DB: INSERT INTO articles
-    DB-->>AR: Created article
-    AR-->>AS: Article entity
-    AS-->>AC: Article DTO
-    AC-->>C: 201 Created
-```
-
 ## ORM Strategy Pattern
 
 ```mermaid
