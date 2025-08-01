@@ -5,10 +5,21 @@
   "projectType": "application",
   "tags": [],
   "targets": {
+    "setup": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npm run db:create",
+          "npm run db:run-file ./database/schema.sql",
+          "npm run db:run-file ./database/seed.sql"
+        ],
+        "parallel": false
+      }
+    },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+      "dependsOn": ["prebuild", "build"],
       "options": {
         "buildTarget": "blog-api:build",
         "runBuildTargetDependencies": false

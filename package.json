@@ -2,7 +2,15 @@
   "name": "@orms-showcase/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "serve:dev": "nx serve blog-api --configuration development",
+    "prestart": "npm run compose:up && npm run db:create && npm run db:migrate",
+    "db:run-file": "./scripts/run-sql.sh",
+    "db:create": "./scripts/createdb-ifnotexists.sh",
+    "setup": "nx setup blog-api",
+    "compose:up": "docker compose up -d",
+    "compose:down": "docker compose down --volumes --rmi local"
+  },
   "private": true,
   "devDependencies": {
     "@eslint/js": "^9.8.0",
