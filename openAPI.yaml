@@ -81,6 +81,49 @@ paths:
       description: Retrieve a list of all articles in the system.
       tags:
         - Articles
+      parameters:
+        - in: query
+          name: includeComments
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Whether to include comments in the response
+        - in: query
+          name: tagId
+          required: false
+          schema:
+            type: string
+          description: Filter articles by tag ID
+        - in: query
+          name: tagName
+          required: false
+          schema:
+            type: string
+          description: Filter articles by tag name
+        - in: query
+          name: authorId
+          required: false
+          schema:
+            type: string
+          description: Filter articles by author ID
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Number of items per page
       responses:
         '200':
           description: A list of articles
@@ -107,8 +150,8 @@ paths:
 
   /articles/{id}:
     get:
-      summary: Get an article by ID (with comments)
-      description: Retrieve a specific article by its unique identifier including all comments.
+      summary: Get an article by ID
+      description: Retrieve a specific article by its unique identifier.
       tags:
         - Articles
       parameters:
@@ -117,6 +160,13 @@ paths:
           required: true
           schema:
             type: string
+        - in: query
+          name: includeComments
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Whether to include comments in the response
       responses:
         '200':
           description: Article found
@@ -161,7 +211,162 @@ paths:
         '204':
           description: Article deleted
 
+  /articles/{articleId}/tag:
+    post:
+      summary: Add a tag to an article
+      description: Associate a tag with a specific article.
+      tags:
+        - Articles/Tags
+      parameters:
+        - in: path
+          name: articleId
+          required: true
+          schema:
+            type: string
+          description: The ID of the article to tag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tagId:
+                  type: string
+      responses:
+        '200':
+          description: Tag added to article
+        '404':
+          description: Article not found
+
+  /articles/{articleId}/tag/{tagId}:
+    delete:
+      summary: Remove a tag from an article
+      description: Disassociate a tag from a specific article.
+      tags:
+        - Articles/Tags
+      parameters:
+        - in: path
+          name: articleId
+          required: true
+          schema:
+            type: string
+          description: The ID of the article to untag
+        - in: path
+          name: tagId
+          required: true
+          schema:
+            type: string
+          description: The ID of the tag to remove from the article
+      responses:
+        '204':
+          description: Tag removed from article
+        '404':
+          description: Article or tag not found
+
+  /articles/tags:
+    get:
+      summary: Get all tags
+      description: Retrieve a list of all tags available in the system.
+      tags:
+        - Articles/Tags
+      responses:
+        '200':
+          description: A list of tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+    post:
+      summary: Create a new tag
+      description: Create a new tag for articles.
+      tags:
+        - Articles/Tags
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Tag created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+
+  /articles/tags/{tagId}:
+    patch:
+      summary: Update a tag
+      description: Update the name of an existing tag.
+      tags:
+        - Articles/Tags
+      parameters:
+        - in: path
+          name: tagId
+          required: true
+          schema:
+            type: string
+          description: The ID of the tag to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Tag updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+        '404':
+          description: Tag not found
+
   /articles/{articleId}/comments:
+    get:
+      summary: Get comments for an article
+      description: Retrieve all comments associated with a specific article.
+      tags:
+        - Articles/Comments
+      parameters:
+        - in: path
+          name: articleId
+          required: true
+          schema:
+            type: string
+          description: The ID of the article to retrieve comments for
+      responses:
+        '200':
+          description: A list of comments for the article
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '404':
+          description: Article not found
     post:
       summary: Create a new comment on an article
       description: Add a new comment to a specific article by providing the comment content and author information.
@@ -300,6 +505,10 @@ components:
         publishedAt:
           type: string
           format: date-time
+        tags:
+          type: array
+          items:
+            type: string
         comments:
           type: array
           items:

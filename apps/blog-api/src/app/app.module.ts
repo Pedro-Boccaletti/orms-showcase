@@ -1,11 +1,20 @@
 import { Module } from '@nestjs/common';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
+import { CoreModule } from '@orms-showcase/core';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    // Configuration module
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+
+    // Core module (includes repositories and business logic)
+    CoreModule,
+  ],
+  controllers: [],
+  providers: [],
+  exports: [],
 })
 export class AppModule {}
