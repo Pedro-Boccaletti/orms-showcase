@@ -1,16 +1,16 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeormRepoModule } from '@orms-showcase/typeorm-repo';
-// import { DrizzleRepoModule } from '@orms-showcase/drizzle-repo';
+import { DrizzleRepoModule } from '@orms-showcase/drizzle-repo';
 // import { PrismaRepoModule } from '@orms-showcase/prisma-repo';
 
 export enum Repositories {
-  //  DRIZZLE = 'drizzle',
+  DRIZZLE = 'drizzle',
   TYPEORM = 'typeorm',
   //  PRISMA = 'prisma',
 }
 
 const RepositoryModules = {
-  //  [Repositories.DRIZZLE]: DrizzleRepoModule,
+  [Repositories.DRIZZLE]: DrizzleRepoModule,
   [Repositories.TYPEORM]: TypeormRepoModule,
   //  [Repositories.PRISMA]: PrismaRepoModule,
 };
